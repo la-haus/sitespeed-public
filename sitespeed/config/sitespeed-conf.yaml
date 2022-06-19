@@ -5,7 +5,7 @@ metadata:
   name: sitespeed-conf
   namespace: sitespeed
 data:
-  competitors.json: |
+  crux.json: |
     {
       "plugins": {
       },

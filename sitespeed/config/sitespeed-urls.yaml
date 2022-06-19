@@ -5,7 +5,7 @@ metadata:
   name: sitespeed-urls
   namespace: sitespeed
 data:
-  competitors.txt: |
+  crux.txt: |
     https://www.example.com
     https://www.foobar.com
   url-set.txt: |
