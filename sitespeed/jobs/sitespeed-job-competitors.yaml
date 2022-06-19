@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: lh-sitespeed-competitors
+  namespace: sitespeed
+spec:
+  schedule: "0 11 * * *" 
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: <Enter service account>
+          containers:
+          - name: sitespeedio     
+            image: sitespeedio/sitespeed.io:24.4.0-plus1
+            resources: # Tune and set for your needs. 
+              requests:
+                cpu: 250m
+                memory: 250Mi
+              limits:
+                cpu: 500m
+                memory: 500Mi
+            imagePullPolicy: IfNotPresent
+            command: ["bash", "-c"]
+            args: 
+              - /start.sh --crux.key $(CRUXKEY) --config /conf/competitors.json /urls/competitors.txt;
+                echo done;
+            env:
+            - name: CRUXKEY
+              valueFrom:
+                secretKeyRef:
+                  name: sitespeed-secrets
+                  key: crux-key
+            volumeMounts:
+            - name: conf
+              mountPath: /conf
+            - name: urls
+              mountPath: /urls
+          restartPolicy: Never 
+          volumes:
+          - name: conf
+            configMap:
+              name: sitespeed-conf
+          - name: urls
+            configMap:
+              name: sitespeed-urls

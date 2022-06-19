@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sitespeed-conf
+  namespace: sitespeed
+data:
+  competitors.json: |
+    {
+      "plugins": {
+      },
+      "graphite": {
+      "host": "<Graphite IP>",
+      "addSlugToKey": true
+      },
+      "browsertime": {
+        "iterations": 1
+      },
+      "s3": {
+        "bucketname": "<Bucket name>"
+      },
+      "slug": "<Slug name>"
+    }
+  plus_desktop.json: |
+    {
+      "plugins": {
+      },
+      "graphite": {
+        "host": "<Graphite IP>",
+        "addSlugToKey": true
+      },
+      "browsertime": {
+        "iterations": 3,
+        "browser": "chrome",
+        "requestheader": "<crawl control http attribute>"
+      },
+      "axe": {
+        "enable": true
+      },
+      "s3": {
+        "bucketname": "<Bucket name>"
+      },
+      "slug": "<Slug name>"
+    }
+  plus_mobile.json: |
+    {
+      "plugins": {
+      },
+      "graphite": {
+        "host": "<Graphite IP>",
+        "addSlugToKey": true
+      },
+      "browsertime": {
+        "iterations": 3,
+        "browser": "chrome",
+        "requestheader": "<crawl control http attribute>"
+      },
+      "axe": {
+        "enable": true
+      },
+      "s3": {
+        "bucketname": "<Bucket name>"
+      },
+      "slug": "<Slug name>",
+      "mobile": true
+    }

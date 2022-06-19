@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: lh-sitespeed-performance
+  namespace: sitespeed
+spec:
+  schedule: "0 12 * * *" 
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: <Enter service account>
+          containers:
+          - name: sitespeedio
+            image: sitespeedio/sitespeed.io:24.4.0-plus1
+            resources: # Tune and set for your needs. 
+              requests:
+                cpu: 250m
+                memory: 250Mi
+              limits:
+                cpu: 500m
+                memory: 500Mi
+            imagePullPolicy: IfNotPresent
+            command: ["bash", "-c"]
+            args: # Here you use either the config for mobile or desktop
+              - /start.sh --config /conf/plus_mobile.json /urls/url-set.txt;
+                echo done;
+            volumeMounts:
+            - name: conf
+              mountPath: /conf
+            - name: urls
+              mountPath: /urls
+          restartPolicy: Never
+          nodeSelector:
+            use: sitespeed
+          volumes:
+          - name: conf
+            configMap:
+              name: sitespeed-conf
+          - name: urls
+            configMap:
+              name: sitespeed-urls

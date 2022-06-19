@@ -1,0 +1,37 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+    name: <EKS cluster name>
+    region: us-east-1
+
+vpc:
+  id: <VPC id>
+  subnets:
+    private:
+      us-east-1a:
+          id: <Subnet id>
+      us-east-1b:
+          id: <Subnet id>
+  securityGroup: <Security Group id>
+
+managedNodeGroups:
+    - name: <Nodegroup name>
+      minSize: <Min size>
+      maxSize: <Min size>
+      privateNetworking: true
+      spot: true
+      instanceTypes: ["c5.xlarge","c5.2xlarge"]
+      labels:
+        use: "sitespeed"
+      ssh: # enable SSH using SSM
+        enableSsm: true
+      iam:
+        attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        # If you dont use a service account for your jobs, you can go with this permission. But It is highly discouraged. 
+        #- arn:aws:iam::aws:policy/AmazonS3FullAccess 
